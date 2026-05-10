@@ -1,12 +1,17 @@
 #!/bin/bash
-set -e
+# NOTE: no 'set -e' — we log errors and continue so failures are visible in /tmp/xray.log
+
+LOG=/tmp/xray.log
 
 # ─────────────────────────────────────────
 #  Generate a random UUID at runtime
 # ─────────────────────────────────────────
 UUID=$(cat /proc/sys/kernel/random/uuid)
 
-# Patch the UUID placeholder into the xray config
+# Restore config from the baked template (idempotent across restarts)
+cp /etc/config.json.template /etc/config.json
+
+# Patch the UUID into the fresh config
 sed -i "s/PLACEHOLDER_UUID/${UUID}/g" /etc/config.json
 
 # ─────────────────────────────────────────
@@ -19,21 +24,21 @@ if [ -z "$CODESPACE_NAME" ]; then
   VLESS_SNI="localhost"
   SECURITY="none"
 else
-  # Port 8080 forwarded by Codespace → available as:
-  # https://${CODESPACE_NAME}-8080.app.github.dev
+  # Port 8080 forwarded by Codespace → externally reachable as:
+  # https://${CODESPACE_NAME}-8080.app.github.dev  (port 443 on the outside)
   PUBLIC_HOST="${CODESPACE_NAME}-8080.app.github.dev"
   VLESS_SNI="${PUBLIC_HOST}"
   SECURITY="tls"
 fi
 
-# URL-encode the path
 ENCODED_PATH="%2Fvless"
 
 # Build the full VLESS link
 VLESS_LINK="vless://${UUID}@${PUBLIC_HOST}:443?encryption=none&security=${SECURITY}&sni=${VLESS_SNI}&allowInsecure=0&type=ws&host=${PUBLIC_HOST}&path=${ENCODED_PATH}#ghtun"
 
 # ─────────────────────────────────────────
-#  Print connection details
+#  Print connection details to stdout
+#  (and to /tmp/xray.log when run via nohup)
 # ─────────────────────────────────────────
 echo ""
 echo "╔══════════════════════════════════════════════════════════════╗"
@@ -58,6 +63,6 @@ echo "✅ Starting Xray..."
 echo ""
 
 # ─────────────────────────────────────────
-#  Start xray (foreground — keeps container alive)
+#  Start xray (foreground — keeps process alive)
 # ─────────────────────────────────────────
 exec /usr/local/bin/xray -c /etc/config.json

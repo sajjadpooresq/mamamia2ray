@@ -9,8 +9,8 @@
       "installZsh": false
     }
   },
-  "postStartCommand": "bash -lc '/app/startup.sh 2>&1 | tee /tmp/xray.log &'",
-  "postAttachCommand": "bash -c 'echo \"\" && echo \"📋 Your VLESS link:\" && echo \"\" && grep \"vless://\" /tmp/xray.log || echo \"⏳ Xray is still starting, wait a moment and re-attach...\"'",
+  "postStartCommand": "nohup /app/startup.sh > /tmp/xray.log 2>&1 &",
+  "postAttachCommand": "bash -c 'sleep 3 && echo \"\" && echo \"╔══════════════════════════════════════════╗\" && echo \"║  🔗 Your VLESS link (copy into client):  ║\" && echo \"╚══════════════════════════════════════════╝\" && echo \"\" && (grep \"vless://\" /tmp/xray.log 2>/dev/null || echo \"⏳ Not ready yet — run: /app/startup.sh\") && echo \"\"'",
   "portsAttributes": {
     "8080": {
       "label": "xray-ws",

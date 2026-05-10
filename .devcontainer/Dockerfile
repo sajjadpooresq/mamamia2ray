@@ -15,8 +15,11 @@ RUN echo "⚙️  Running installation script..." && \
     chmod +x /app/install.sh && /app/install.sh && \
     echo "✅ Xray installation completed"
 
-# Copy runtime config and startup script
+# Copy runtime config — then bake an immutable template copy
 COPY config.json /etc/config.json
+RUN cp /etc/config.json /etc/config.json.template
+
+# Copy startup script
 COPY startup.sh /app/startup.sh
 RUN chmod +x /app/startup.sh
 
