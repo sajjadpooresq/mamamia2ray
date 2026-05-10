@@ -15,7 +15,7 @@
     "8080": {
       "label": "xray-ws",
       "protocol": "http",
-      "onAutoForward": "silent",
+      "onAutoForward": "notify",
       "visibility": "public"
     }
   },
