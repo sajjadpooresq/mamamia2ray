@@ -65,10 +65,7 @@ If you find this project useful, consider supporting its development:
 - **Ethereum**: `0x695CCF873d51E4C2dC1321b405C63BFE99c5a536`
 - **Solana**: `C2d9u9nY2hZfxsi5Fwz1o5VjGGQujWmxeqZ3upKvHBfD`
 - **TON Coin**: `UQAjStDMoMUusqRAuQGZ0Qbc2Th45yUUMdKlbhQ_6aS2TWlD`
-
-### Other Options
-- [Buy me a coffee ☕](https://www.buymeacoffee.com/amiremohamadi)
-- **Iranian Users**: Visit [edrisranjbar.ir/donation](https://edrisranjbar.ir/donation)
+- [Buy me a coffee ☕](https://www.buymeacoffee.com/amiremohamadi) (donate to the main REPO, he made it happen)
 
 ## Disclaimer
 
